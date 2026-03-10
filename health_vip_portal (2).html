@@ -1,0 +1,2221 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health VIP - Elit Sağlık Hizmetleri</title>
+    
+    <!-- Profesyonel Font Ailesi: Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- İkonlar için Font Awesome (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* =============================================
+           CSS KODLARI: VIP TASARIM VE KOYU TEMA
+           ============================================= */
+        
+        /* --- 1. Renk Değişkenleri ve Temel Kurulum --- */
+        :root {
+            /* VIP Renk Paleti (Açık Tema) */
+            --primary-color: #0a4d9a; /* Güven veren kurumsal mavi */
+            --secondary-color: #c5a47e; /* VIP hissi için yumuşak altın */
+            --text-color-light: #333;
+            --text-color-muted: #666;
+            --background-light: #f9f9f9;
+            --card-background-light: #ffffff;
+            --border-light: #e0e0e0;
+            --success-color: #28a745; /* Eczane 'Açık' durumu için */
+
+            /* Koyu Tema Değişkenleri */
+            --text-color-dark: #e0e0e0;
+            --text-color-muted-dark: #aaa;
+            --background-dark: #121212;
+            --card-background-dark: #1e1e1e;
+            --border-dark: #333;
+            
+            /* Genel Değişkenler */
+            --font-family: 'Montserrat', sans-serif;
+            --shadow-subtle: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-strong: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Başlangıçta Açık Tema renklerini kullan */
+        body {
+            --text-color: var(--text-color-light);
+            --text-muted: var(--text-color-muted);
+            --background-color: var(--background-light);
+            --card-background: var(--card-background-light);
+            --border-color: var(--border-light);
+        }
+
+        /* Koyu Tema aktif olduğunda renkleri değiştir */
+        body.dark-mode {
+            --text-color: var(--text-color-dark);
+            --text-muted: var(--text-color-muted-dark);
+            --background-color: var(--background-dark);
+            --card-background: var(--card-background-dark);
+            --border-color: var(--border-dark);
+        }
+
+        /* --- 2. Genel Stil Sıfırlama --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            /* Tema değişiminde yumuşak geçiş */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--secondary-color);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /*
+           SAYFA GİZLEME/GÖSTERME SİSTEMİ
+           Tüm sayfaları varsayılan olarak gizle
+        */
+        main > section {
+            display: none;
+            padding: 80px 0;
+        }
+        
+        /* Ana sayfa (hero) bölümü her zaman görünsün */
+        #home {
+            display: flex;
+            min-height: 100vh;
+            padding: 0; /* Hero bölümünün kendi padding'i var */
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--text-color);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--secondary-color);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+        
+        .section-subtitle {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        body.dark-mode .section-subtitle {
+            color: var(--secondary-color);
+        }
+
+
+        /* --- 3. Header ve Navigasyon (Menü) --- */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            /* VIP Cam Efekti */
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Koyu temada header arka planı */
+        body.dark-mode .header {
+            background-color: rgba(30, 30, 30, 0.1);
+        }
+        
+        /* GÜNCELLENDİ: Header artık container içinde değil, tam genişlikte */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            width: 100%;
+            padding: 0 40px; /* Kenarlardan boşluk */
+        }
+
+        /* GÜNCELLENDİ: Navigasyon 3 bölüme ayrıldı */
+        .nav-left, .nav-center, .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-left {
+            flex-shrink: 0; /* Logo küçülmesin */
+        }
+        
+        .nav-center {
+            flex-grow: 1; /* Ortadaki linkler alanı kaplasın */
+            justify-content: center;
+        }
+        
+        .nav-right {
+            flex-shrink: 0; /* Sağdaki butonlar küçülmesin */
+            justify-content: flex-end;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .nav-logo i {
+            color: var(--primary-color);
+        }
+
+        .nav-logo span {
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-list {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            font-weight: 600;
+            color: var(--text-color);
+            padding: 10px 0;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            white-space: nowrap; /* Linkler kırılmasın */
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--secondary-color);
+            border-bottom-color: var(--secondary-color);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px; 
+        }
+        
+        /* Arama Çubuğu Stilleri */
+        .nav-search {
+            display: flex;
+            align-items: center;
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 5px 5px 5px 15px;
+            transition: all 0.3s ease;
+        }
+        .nav-search input {
+            border: none;
+            outline: none;
+            background-color: transparent;
+            color: var(--text-color);
+            font-family: var(--font-family);
+            font-weight: 500;
+            width: 150px; /* Başlangıç genişliği */
+            transition: width 0.4s ease;
+        }
+        .nav-search input::placeholder {
+            color: var(--text-muted);
+        }
+        .nav-search input:focus {
+            width: 200px; /* Focus olunca genişle */
+        }
+        .nav-search button {
+            border: none;
+            background: var(--primary-color);
+            color: #fff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+        .nav-search button:hover {
+            background: var(--secondary-color);
+        }
+        /* Koyu temada arama */
+        body.dark-mode .nav-search input {
+            color: var(--text-color-dark);
+        }
+
+        /* Tema Değiştirme Butonu */
+        #theme-toggle {
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        /* Mobil Menü Butonu */
+        #menu-toggle {
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: none; /* Masaüstünde gizli */
+            color: var(--text-color);
+        }
+
+        /* Genel Buton Stili (VIP) */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #063a7a);
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 77, 154, 0.3);
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 77, 154, 0.5);
+            color: #fff;
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-color);
+            white-space: nowrap;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        body.dark-mode .btn-secondary {
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        body.dark-mode .btn-secondary:hover {
+            background-color: var(--secondary-color);
+            color: var(--background-dark);
+        }
+
+
+        /* --- 4. Hero (Ana Giriş) Bölümü --- */
+        #home {
+            align-items: center;
+            background: url('https://placehold.co/1920x1080/f0f4f8/333?text=Modern+Hastane+Girişi') no-repeat center center/cover;
+            background-attachment: fixed; /* Parallax efekti */
+            position: relative;
+        }
+        
+        /* Ana sayfa aktifken göster */
+        main section#home {
+            display: flex;
+        }
+
+        #home::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Görseli koyulaştır */
+        }
+
+        body.dark-mode #home::before {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            color: #fff;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero-content h1 span {
+            color: var(--secondary-color);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+        
+        /* --- 4.1 Ana Sayfa Ek Özellikler (VIP Servisler) --- */
+        #home-features {
+            background-color: var(--card-background);
+        }
+        main section#home-features {
+            display: block; /* Ana sayfayla birlikte bu da görünsün */
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background-color: var(--background-color);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-subtle);
+            text-align: center;
+        }
+        
+        .feature-card .icon {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Ana Sayfa Hasta Yorumları */
+        #home-testimonials {
+            background-color: var(--background-color);
+        }
+        main section#home-testimonials {
+            display: block; /* Ana sayfayla birlikte bu da görünsün */
+        }
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .testimonial-card {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 5px solid var(--secondary-color);
+            box-shadow: var(--shadow-subtle);
+        }
+        .testimonial-card p.comment {
+            font-style: italic;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .testimonial-card p.comment::before {
+            content: '\f10d'; /* Font Awesome 'quote-left' */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            position: absolute;
+            left: -15px;
+            top: -10px;
+            opacity: 0.2;
+        }
+        .testimonial-card p.author {
+            font-weight: 700;
+            color: var(--text-color);
+            text-align: right;
+        }
+
+
+        /* --- 5. Hakkımızda Bölümü --- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+
+        .about-content h3 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        body.dark-mode .about-content h3 {
+            color: var(--secondary-color);
+        }
+
+        .about-content p {
+            margin-bottom: 15px;
+            color: var(--text-muted);
+        }
+        
+        .about-content ul li {
+            margin-bottom: 10px;
+            color: var(--text-muted);
+        }
+
+        .about-image {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-strong);
+        }
+        
+        .about-image img {
+            border-radius: 10px;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .value-card {
+            text-align: center;
+        }
+        
+        .value-card .icon {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+        
+        .value-card h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+        
+        .value-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+
+        /* --- 6. Bölümler Bölümü --- */
+        #bolumler {
+            background-color: var(--card-background); /* Hafif farklı arka plan */
+        }
+        
+        .bolumler-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Daha fazla bölüm için biraz küçültüldü */
+            gap: 30px;
+        }
+
+        .bolum-card {
+            background-color: var(--background-color);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bolum-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-strong);
+            border-color: var(--secondary-color);
+        }
+        
+        .bolum-card .icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .bolum-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .bolum-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            flex-grow: 1; /* Paragrafın esnemesini sağlar */
+            margin-bottom: 20px;
+        }
+        
+        /* --- 7. Doktorlar Bölümü --- */
+        .doktorlar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .doktor-card {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .doktor-card:hover {
+            box-shadow: var(--shadow-strong);
+            transform: scale(1.03);
+        }
+
+        .doktor-card .doktor-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            object-position: top center;
+            filter: grayscale(30%); /* Hafif sönük, profesyonel */
+        }
+        
+        .doktor-card:hover .doktor-img {
+            filter: grayscale(0%);
+        }
+
+        .doktor-info {
+            padding: 25px;
+        }
+
+        .doktor-info h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .doktor-info p {
+            font-size: 1rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        
+        /* YENİ: Anlaşmalı Kurumlar Sayfası */
+        #anlasmalikurumlar {
+            background-color: var(--background-color);
+        }
+        .kurumlar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Logolar için biraz daha geniş yer */
+            gap: 20px;
+        }
+        .kurum-logo {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.3s ease;
+            height: 100px; /* Sabit yükseklik */
+        }
+        .kurum-logo:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-strong);
+            border-color: var(--secondary-color);
+        }
+        .kurum-logo img {
+            max-width: 100%;
+            height: 60px;
+            object-fit: contain;
+            filter: grayscale(100%); /* Profesyonel görünüm için */
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        .kurum-logo:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+        
+        /* YENİ: Nöbetçi Eczaneler Sayfası */
+        #eczaneler {
+            background-color: var(--card-background);
+        }
+        .eczane-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+        .eczane-card {
+            background-color: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: var(--shadow-subtle);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .eczane-card:hover {
+            box-shadow: var(--shadow-strong);
+            transform: translateY(-5px);
+        }
+        .eczane-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .eczane-header h3 {
+            font-size: 1.4rem;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+        .eczane-header .status {
+            font-weight: 700;
+            color: var(--success-color); /* Yeşil renk */
+            font-size: 0.9rem;
+        }
+        .eczane-body {
+            padding: 20px;
+        }
+        .eczane-body p {
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .eczane-body p i {
+            color: var(--secondary-color);
+            margin-right: 10px;
+            width: 20px;
+        }
+        .eczane-footer {
+            padding: 0 20px 20px;
+        }
+
+
+        /* --- 8. İletişim, Saatler ve Harita --- */
+        #iletisim {
+            background-color: var(--card-background);
+        }
+        
+        .iletisim-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .iletisim-info h3,
+        .calisma-saatleri h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        
+        body.dark-mode .iletisim-info h3,
+        body.dark-mode .calisma-saatleri h3 {
+            color: var(--secondary-color);
+        }
+        
+        .iletisim-info ul li {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .iletisim-info ul li i {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .calisma-saatleri ul li {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .calisma-saatleri ul li span {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .harita-container {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-strong);
+            border: 1px solid var(--border-color);
+            height: 450px;
+        }
+        
+        .harita-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+/* --- 9. Randevu Formu --- */
+#randevu {
+    background-color: var(--background-color);
+}
+
+.randevu-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--card-background);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: var(--shadow-strong);
+    border: 1px solid var(--border-color);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1; /* İki sütunu da kapla */
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(10, 77, 154, 0.2);
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.randevu-form-container .btn-primary {
+    width: 100%;
+    margin-top: 20px;
+    font-size: 1.1rem;
+}
+
+/* --- 10. S.S.S. (FAQ) Bölümü --- */
+#faq {
+    background-color: var(--background-color);
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.faq-question i {
+    color: var(--secondary-color);
+    transition: transform 0.3s ease;
+}
+
+.faq-answer {
+    padding: 0 20px;
+    color: var(--text-muted);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 300px; /* Cevabın sığacağı kadar yükseklik */
+    padding: 0 20px 20px;
+}
+
+.faq-item.active .faq-question i {
+    transform: rotate(180deg);
+}
+
+
+/* --- 11. Footer (Alt Kısım) --- */
+.footer {
+            background-color: var(--card-background-dark);
+            color: var(--text-color-muted-dark);
+            padding: 40px 0 20px;
+            text-align: center;
+            border-top: 5px solid var(--secondary-color);
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        .footer-logo i { color: var(--primary-color); }
+        .footer-logo span { color: var(--secondary-color); }
+
+        .footer p {
+            font-size: 0.9rem;
+        }
+        
+        .footer-social {
+            margin: 20px 0;
+        }
+        
+        .footer-social a {
+            color: #fff;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-social a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* --- 12. Mobil Uyumluluk (Responsive) --- */
+        @media (max-width: 1200px) {
+             /* GÜNCELLENDİ: Header tablet için ayarlandı */
+            .nav {
+                padding: 0 20px;
+            }
+            .nav-center {
+                display: none; /* Tablette orta menü gizlenir, hamburger'e dönüşür */
+            }
+            #menu-toggle {
+                display: block; /* Hamburger menü görünür */
+            }
+            .nav-search input {
+                width: 100px; /* Tablette arama çubuğu küçülür */
+            }
+            .nav-search input:focus {
+                width: 150px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 70px; /* Header yüksekliği */
+                right: -100%; /* Başlangıçta gizli */
+                width: 100%;
+                height: calc(100vh - 70px);
+                background-color: var(--background-color);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: right 0.4s ease-in-out;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            }
+            
+            .nav-menu.show-menu {
+                right: 0;
+            }
+            
+            .nav-list {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-link {
+                font-size: 1.2rem;
+            }
+            
+            /* GÜNCELLENDİ: Mobilde arama çubuğu header'da değil, menü içinde gösterilebilir (opsiyonel) */
+             /* Şimdilik basitçe gizli kalsın */
+            .nav-search {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-image {
+                grid-row: 1; /* Resmi üste al */
+            }
+            
+            .iletisim-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .nav {
+                padding: 0 15px; /* Mobilde header padding'i azalt */
+            }
+            .nav-actions {
+                gap: 10px; /* Mobilde buton arası boşluk */
+            }
+            .btn-primary {
+                padding: 10px 15px; /* Mobilde randevu butonu küçülsün */
+                font-size: 0.9rem;
+            }
+            
+            .hero-content {
+                text-align: center;
+            }
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            .hero-content p {
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .doktorlar-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .eczane-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Arama Modalı (Bildirim) Stilleri */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            display: none; /* Varsayılan gizli */
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            border-top: 5px solid var(--primary-color);
+        }
+        .modal-content h3 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+        .modal-content p {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+        .modal-close {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .modal-close:hover {
+            background-color: var(--primary-color-alt);
+        }
+        
+        /* Chatbot (Asistan) Stilleri */
+        .chat-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), #063a7a);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 77, 154, 0.4);
+            z-index: 1001;
+            transition: transform 0.3s ease;
+        }
+        .chat-fab:hover {
+            transform: scale(1.1);
+        }
+        
+        .chat-widget {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            max-width: 90vw;
+            height: 500px;
+            max-height: 70vh;
+            background-color: var(--card-background);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid var(--border-color);
+            z-index: 1000;
+            display: none; /* Varsayılan gizli */
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .chat-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        .chat-header p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+        #chat-close {
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        #chat-close:hover {
+            transform: scale(1.2);
+        }
+        
+        .chat-body {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .chat-message {
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 80%;
+            line-height: 1.4;
+            font-size: 0.9rem;
+        }
+        
+        .chat-message.bot {
+            background-color: var(--border-color);
+            color: var(--text-color);
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+        }
+        body.dark-mode .chat-message.bot {
+            background-color: var(--border-dark);
+        }
+        
+        .chat-message.user {
+            background-color: var(--primary-color);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+            align-self: flex-end;
+        }
+        
+        .chat-message.typing {
+            color: var(--text-muted);
+            font-style: italic;
+            align-self: flex-start;
+        }
+        
+        .chat-input-area {
+            border-top: 1px solid var(--border-color);
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        #chat-input {
+            flex-grow: 1;
+            border: 1px solid var(--border-color);
+            background-color: var(--background-color);
+            border-radius: 50px;
+            padding: 10px 15px;
+            font-family: var(--font-family);
+            color: var(--text-color);
+            outline: none;
+        }
+        #chat-input:focus {
+            border-color: var(--primary-color);
+        }
+        
+        #chat-send {
+            border: none;
+            background: var(--primary-color);
+            color: #fff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #chat-send:hover {
+            background: var(--secondary-color);
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <!-- =============================================
+       HTML KODLARI: SİTE İSKELETİ
+       ============================================= -->
+
+    <!-- ===== 1. HEADER / NAVİGASYON ===== -->
+    <header class="header">
+        <!-- GÜNCELLENDİ: Header yapısı 3 bölüme ayrıldı -->
+        <nav class="nav">
+            
+            <div class="nav-left">
+                <!-- Ana sayfa linki -->
+                <a class="nav-logo" data-target="home">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                    Health <span>VIP</span>
+                </a>
+            </div>
+
+            <div class="nav-center">
+                <div class="nav-menu" id="nav-menu">
+                    <ul class="nav-list">
+                        <li><a class="nav-link" data-target="hakkimizda">Hakkımızda</a></li>
+                        <li><a class="nav-link" data-target="bolumler">Bölümler</a></li>
+                        <li><a class="nav-link" data-target="doktorlar">Doktorlar</a></li>
+                        <li><a class="nav-link" data-target="anlasmalikurumlar">Anlaşmalı Kurumlar</a></li>
+                        <li><a class="nav-link" data-target="eczaneler">Nöbetçi Eczaneler</a></li> <!-- YENİ -->
+                        <li><a class="nav-link" data-target="faq">S.S.S.</a></li>
+                        <li><a class="nav-link" data-target="iletisim">İletişim</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                <div class="nav-actions">
+                    <!-- Arama Çubuğu -->
+                    <div class="nav-search">
+                        <input type="text" placeholder="Doktor, Bölüm Ara..." id="search-input">
+                        <button id="search-button"><i class="fa-solid fa-search"></i></button>
+                    </div>
+                    
+                    <!-- Koyu Tema Butonu -->
+                    <i class="fa-solid fa-moon" id="theme-toggle"></i>
+                    
+                    <!-- Mobil Menü Butonu -->
+                    <i class="fa-solid fa-bars" id="menu-toggle"></i>
+                    
+                    <!-- Randevu linki -->
+                    <a class="btn-primary" style="margin-left: 10px;" data-target="randevu">Randevu Al</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ===== 2. ANA İÇERİK (SAYFALAR) ===== -->
+    <main>
+
+        <!-- BÖLÜM (SAYFA): HOME (HERO) -->
+        <section id="home">
+            <div class="container hero-content">
+                <h1>Sağlığınızda <span>Elit</span> Dokunuş</h1>
+                <p>En son teknoloji, uzman kadro ve size özel VIP hizmet anlayışıyla tanışın. Sağlığınız bizim önceliğimizdir.</p>
+                <a class="btn-primary" data-target="bolumler">Bölümlerimizi Keşfedin</a>
+            </div>
+        </section>
+        
+        <!-- BÖLÜM (SAYFA): ANA SAYFA EK ÖZELLİKLER (Sadece ana sayfada görünür) -->
+        <section id="home-features">
+            <div class="container">
+                <h2 class="section-title">Neden Health VIP?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fa-solid fa-user-doctor icon"></i>
+                        <h3>Uzman Kadro</h3>
+                        <p>Alanında lider, uluslararası deneyime sahip profesör ve uzman doktorlar.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fa-solid fa-microscope icon"></i>
+                        <h3>İleri Teknoloji</h3>
+                        <p>En güncel teşhis ve tedavi cihazları ile en doğru sonuçlar.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fa-solid fa-star icon"></i>
+                        <h3>VIP Hizmet Anlayışı</h3>
+                        <p>Size özel asistan, konforlu odalar ve bekletmeyen randevu sistemi.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BÖLÜM: HASTA YORUMLARI (Sadece ana sayfada) -->
+        <section id="home-testimonials">
+            <div class="container">
+                <h2 class="section-title">Hastalarımız Bizim İçin Ne Dedi?</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <p class="comment">"Aldığım en profesyonel ve aynı zamanda en insancıl sağlık hizmetiydi. Prof. Dr. Ayşe Yılmaz ve ekibine sonsuz teşekkürler. Kendimi evimde gibi hissettim."</p>
+                        <p class="author">- A. K.</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="comment">"Acil servise geldiğim andan taburcu olduğum ana kadar her detay düşünülmüştü. Health VIP, adının hakkını veriyor. Bekleme yok, ilgi tam."</p>
+                        <p class="author">- M. T.</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="comment">"Randevu almaktan sonuçları öğrenmeye kadar tüm süreç dijital ve çok hızlıydı. Asistan hizmeti inanılmaz bir kolaylık. Teşekkür ederim."</p>
+                        <p class="author">- E. C.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BÖLÜM (SAYFA): HAKKIMIZDA -->
+        <section id="hakkimizda" class="container">
+            <h2 class="section-title">Hakkımızda</h2>
+            <div class="about-grid">
+                <div class="about-content">
+                    <h3>Geleceğin Sağlık Anlayışını Bugün Sunuyoruz</h3>
+                    <p>Health VIP olarak, hasta odaklı yaklaşımımız ve multidisipliner uzman kadromuzla fark yaratıyoruz. Bizim için her hasta özeldir ve her tedavi süreci kişiye özel planlanır.</p>
+                    <p>Misyonumuz, en güncel tıbbi bilgiyi, ileri teknoloji ile birleştirerek etik ve güvenilir sağlık hizmetini VIP konforunda sunmaktır.</p>
+                    <ul>
+                        <li><i class="fa-solid fa-circle-check" style="color: var(--secondary-color); margin-right: 5px;"></i> Kişiye Özel Tedavi Planları</li>
+                        <li><i class="fa-solid fa-circle-check" style="color: var(--secondary-color); margin-right: 5px;"></i> Alanında Lider Uzman Doktorlar</li>
+                        <li><i class="fa-solid fa-circle-check" style="color: var(--secondary-color); margin-right: 5px;"></i> 7/24 VIP Destek ve Danışmanlık</li>
+                    </ul>
+                </div>
+                <div class="about-image">
+                    <!--  -->
+                    <img src="https://placehold.co/600x400/e0e8f0/555?text=Huzurlu+Klinik+Ortamı" alt="Hakkımızda Görseli">
+                </div>
+            </div>
+            
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 60px 0;">
+            
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h3 class="section-subtitle">Misyon, Vizyon ve Değerlerimiz</h3>
+            </div>
+            
+            <div class="values-grid">
+                <div class="value-card">
+                    <i class="fa-solid fa-bullseye icon"></i>
+                    <h4>Misyonumuz</h4>
+                    <p>Etik değerlerden ödün vermeden, en yüksek kalitede sağlık hizmeti sunmak.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa-solid fa-eye icon"></i>
+                    <h4>Vizyonumuz</h4>
+                    <p>Sağlıkta mükemmeliyet merkezi olarak uluslararası alanda referans gösterilmek.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa-solid fa-gem icon"></i>
+                    <h4>Değerlerimiz</h4>
+                    <p>Hasta odaklılık, şeffaflık, sürekli gelişim ve mutlak mahremiyet.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- BÖLÜM (SAYFA): BÖLÜMLER -->
+        <section id="bolumler">
+            <div class="container">
+                <h2 class="section-title">Tıbbi Bölümlerimiz</h2>
+                <div class="bolumler-grid">
+                    <!-- Bölüm Kartı 1-8 -->
+                    <div class="bolum-card"><div><i class="fa-solid fa-heart-pulse icon"></i><h3>Kardiyoloji</h3><p>Kalp ve damar hastalıklarının tanı ve tedavisinde en ileri yöntemler.</p></div><a href="#" class="btn-secondary">Detaylı Bilgi</a></div>
+                    <div class="bolum-card"><div><i class="fa-solid fa-brain icon"></i><h3>Nöroloji</h3><p>Beyin, sinir ve kas sistemi hastalıklarında uzman yaklaşım.</p></div><a href="#" class="btn-secondary">Detaylı Bilgi</a></div>
+                    <div class="bolum-card"><div><i class="fa-solid fa-bone icon"></i><h3>Ortopedi</h3><p>Kas ve iskelet sistemi rahatsızlıkları için modern cerrahi ve fizik tedavi.</p></div><a href="#" class="btn-secondary">Detaylı Bilgi</a></div>
+                    <div class="bolum-card"><div><i class="fa-solid fa-eye icon"></i><h3>Göz Hastalıkları</h3><p>Lazer ve diğer göz cerrahilerinde en yeni teknolojiler.</p></div><a href="#" class="btn-secondary">Detaylı Bilgi</a></div>
+                    <div class="bolum-card"><div><i class="fa-solid fa-child-reaching icon"></i><h3>Pediatri</h3><p>Çocuk sağlığı ve hastalıklarında şefkatli ve uzman bakım.</p></div><a href="#" class="btn-secondary">Detaylı Bilgi</a></div>
+                    <div class="bolum-card"><div><i class="fa-solid fa-x-ray icon"></i><h3>Radyoloji</h3><p>MR, BT ve Ultrasonografi ile keskin ve hızlı görüntüleme.</p></div><a href="#" class="btn-secondary">Detaylı Bilgi</a></div>
+                     <div class="bolum-card"><div><i class="fa-solid fa-spa icon"></i><h3>Dermatoloji</h3><p>Kozmetik ve medikal cilt hastalıkları, lazer tedavileri ve cilt bakımı.</p></div><a href="#" class="btn-secondary">Detaylı Bilgi</a></div>
+                     <div class="bolum-card"><div><i class="fa-solid fa-leaf icon"></i><h3>Beslenme ve Diyet</h3><p>Kişiye özel beslenme programları, kilo yönetimi ve sağlıklı yaşam.</p></div><a href="#" class="btn-secondary">Detaylı Bilgi</a></div>
+                    
+                    <!-- YENİ BÖLÜMLER 9-12 -->
+                     <div class="bolum-card">
+                        <div>
+                            <i class="fa-solid fa-user-gear icon"></i>
+                            <h3>Psikiyatri</h3>
+                            <p>Ruh sağlığınız, en az beden sağlığınız kadar önemli. Uzman psikiyatr ve psikolog kadromuz.</p>
+                        </div>
+                        <a href="#" class="btn-secondary">Detaylı Bilgi</a>
+                    </div>
+                     <div class="bolum-card">
+                        <div>
+                            <i class="fa-solid fa-kit-medical icon"></i>
+                            <h3>Genel Cerrahi</h3>
+                            <p>Laparoskopik ve robotik cerrahi dahil tüm genel cerrahi operasyonları.</p>
+                        </div>
+                        <a href="#" class="btn-secondary">Detaylı Bilgi</a>
+                    </div>
+                     <div class="bolum-card">
+                        <div>
+                            <i class="fa-solid fa-ear-listen icon"></i>
+                            <h3>K.B.B.</h3>
+                            <p>Kulak, Burun ve Boğaz hastalıklarının endoskopik ve cerrahi tedavileri.</p>
+                        </div>
+                        <a href="#" class="btn-secondary">Detaylı Bilgi</a>
+                    </div>
+                     <div class="bolum-card">
+                        <div>
+                            <i class="fa-solid fa-person-running icon"></i>
+                            <h3>Fizik Tedavi</h3>
+                            <p>Ameliyat sonrası ve spor yaralanmaları için kapsamlı rehabilitasyon merkezi.</p>
+                        </div>
+                        <a href="#" class="btn-secondary">Detaylı Bilgi</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- BÖLÜM (SAYFA): ANLAŞMALI KURUMLAR (GÜNCELLENDİ) -->
+        <section id="anlasmalikurumlar">
+            <div class="container">
+                <h2 class="section-title">Anlaşmalı Kurumlar</h2>
+                <p style="text-align: center; max-width: 700px; margin: -30px auto 40px; color: var(--text-muted);">
+                    Health VIP olarak, Türkiye'nin ve dünyanın önde gelen birçok özel sağlık sigortası ve kurumu ile anlaşmamız bulunmaktadır.
+                </p>
+                <div class="kurumlar-grid">
+                    <!-- GÜNCELLENDİ: Gerçekçi logolar -->
+                    <div class="kurum-logo">
+                        <img src="https://placehold.co/150x60/003781/ffffff?text=Allianz" alt="Allianz Sigorta Logosu">
+                    </div>
+                    <div class="kurum-logo">
+                        <img src="https://placehold.co/150x60/004b93/ffffff?text=Anadolu+Sigorta" alt="Anadolu Sigorta Logosu">
+                    </div>
+                    <div class="kurum-logo">
+                        <img src="https://placehold.co/150x60/00338d/ffffff?text=AXA+Sigorta" alt="AXA Sigorta Logosu">
+                    </div>
+                    <div class="kurum-logo">
+                        <img src="https://placehold.co/150x60/d91e10/ffffff?text=Mapfre+Sigorta" alt="Mapfre Sigorta Logosu">
+                    </div>
+                    <div class="kurum-logo">
+                        <img src="https://placehold.co/150x60/b81f34/ffffff?text=Türkiye+Sigorta" alt="Türkiye Sigorta Logosu">
+                    </div>
+                    <div class="kurum-logo">
+                        <img src="https://placehold.co/150x60/00a1e0/ffffff?text=Ak+Sigorta" alt="Ak Sigorta Logosu">
+                    </div>
+                    <div class="kurum-logo">
+                        <img src="https://placehold.co/150x60/0070b8/ffffff?text=Bupa+Acıbadem" alt="Bupa Acıbadem Sigorta Logosu">
+                    </div>
+                    <div class="kurum-logo">
+                        <img src="https://placehold.co/150x60/e60000/ffffff?text=Sompo+Sigorta" alt="Sompo Sigorta Logosu">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BÖLÜM (SAYFA): DOKTORLAR -->
+        <section id="doktorlar" class="container">
+            <h2 class="section-title">Uzman Doktorlarımız</h2>
+            <div class="doktorlar-grid">
+                <!-- Doktor Kartları (12 adet) -->
+                <div class="doktor-card">
+                    <img src="https://placehold.co/400x400/d4e0eb/333?text=Prof.+Dr.+Ayşe+Yılmaz" alt="Doktor Ayşe Yılmaz" class="doktor-img">
+                    <div class="doktor-info"><h3>Prof. Dr. Ayşe Yılmaz</h3><p>Kardiyoloji Uzmanı</p></div>
+                </div>
+                <div class="doktor-card">
+                    <img src="https://placehold.co/400x400/d4e0eb/333?text=Op.+Dr.+Mehmet+Kaya" alt="Doktor Mehmet Kaya" class="doktor-img">
+                    <div class="doktor-info"><h3>Op. Dr. Mehmet Kaya</h3><p>Ortopedi ve Travmatoloji</p></div>
+                </div>
+                <div class="doktor-card">
+                    <img src="https://placehold.co/400x400/d4e0eb/333?text=Uzm.+Dr.+Elif+Demir" alt="Doktor Elif Demir" class="doktor-img">
+                    <div class="doktor-info"><h3>Uzm. Dr. Elif Demir</h3><p>Nöroloji Uzmanı</p></div>
+                </div>
+                <div class="doktor-card">
+                    <img src="https://placehold.co/400x400/d4e0eb/333?text=Prof.+Dr.+Ali+Vural" alt="Doktor Ali Vural" class="doktor-img">
+                    <div class="doktor-info"><h3>Prof. Dr. Ali Vural</h3><p>Göz Hastalıkları</p></div>
+                </div>
+                <div class="doktor-card">
+                    <img src="https://placehold.co/400x400/d4e0eb/333?text=Uzm.+Dr.+Zeynep+Aksoy" alt="Doktor Zeynep Aksoy" class="doktor-img">
+                    <div class="doktor-info"><h3>Uzm. Dr. Zeynep Aksoy</h3><p>Pediatri Uzmanı</p></div>
+                </div>
+                <div class="doktor-card">
+                    <img src="https://placehold.co/400x400/d4e0eb/333?text=Op.+Dr.+Emre+Kurt" alt="Doktor Emre Kurt" class="doktor-img">
+                    <div class="doktor-info"><h3>Op. Dr. Emre Kurt</h3><p>Plastik Cerrahi</p></div>
+                </div>
+                <div class="doktor-card">
+                    <img src="https://placehold.co/400x400/d4e0eb/333?text=Prof.+Dr.+Fatma+Öztürk" alt="Doktor Fatma Öztürk" class="doktor-img">
+                    <div class="doktor-info"><h3>Prof. Dr. Fatma Öztürk</h3><p>Radyoloji Uzmanı</p></div>
+                </div>
+                <div class="doktor-card">
+                    <img src="https://placehold.co/400x400/d4e0eb/333?text=Uzm.+Dr.+Caner+Bilgin" alt="Doktor Caner Bilgin" class="doktor-img">
+                    <div class="doktor-info"><h3>Uzm. Dr. Caner Bilgin</h3><p>Nöroloji Uzmanı</p></div>
+                </div>
+                <div class="doktor-card">
+                    <img src="https://placehold.co/400x400/d4e0eb/333?text=Doç.+Dr.+Sena+Erdem" alt="Doktor Sena Erdem" class="doktor-img">
+                    <div class="doktor-info"><h3>Doç. Dr. Sena Erdem</h3><p>Dermatoloji Uzmanı</p></div>
+                </div>
+                <div class="doktor-card">
+                    <img src="https://placehold.co/400x400/d4e0eb/333?text=Dyt.+Ozan+Toksöz" alt="Diyetisyen Ozan Toksöz" class="doktor-img">
+                    <div class="doktor-info"><h3>Dyt. Ozan Toksöz</h3><p>Beslenme ve Diyet</p></div>
+                </div>
+                <div class="doktor-card">
+                    <img src="https://placehold.co/400x400/d4e0eb/333?text=Op.+Dr.+İrem+Sancak" alt="Doktor İrem Sancak" class="doktor-img">
+                    <div class="doktor-info"><h3>Op. Dr. İrem Sancak</h3><p>Kadın Hastalıkları</p></div>
+                </div>
+                <div class="doktor-card">
+                    <img src="https://placehold.co/400x400/d4e0eb/333?text=Prof.+Dr.+Kemal+Aslan" alt="Doktor Kemal Aslan" class="doktor-img">
+                    <div class="doktor-info"><h3>Prof. Dr. Kemal Aslan</h3><p>Genel Cerrahi</p></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- YENİ BÖLÜM (SAYFA): NÖBETÇİ ECZANELER -->
+        <section id="eczaneler">
+            <div class="container">
+                <h2 class="section-title">Nöbetçi ve Anlaşmalı Eczaneler</h2>
+                <p style="text-align: center; max-width: 700px; margin: -30px auto 40px; color: var(--text-muted);">
+                    Hastanemiz çevresinde 7/24 hizmet alabileceğiniz veya anlaşmamız bulunan nöbetçi eczaneler listesi.
+                </p>
+                <div class="eczane-grid">
+                    <!-- Örnek Eczane 1 -->
+                    <div class="eczane-card">
+                        <div class="eczane-header">
+                            <h3>Merkez Eczanesi</h3>
+                            <span class="status"><i class="fa-solid fa-check-circle"></i> ŞU AN AÇIK - NÖBETÇİ</span>
+                        </div>
+                        <div class="eczane-body">
+                            <p><i class="fa-solid fa-map-marker-alt"></i> Örnek Cad. Sağlık Sok. No:5 (Hastaneye 50m)</p>
+                            <p><i class="fa-solid fa-phone"></i> +90 (212) 111 22 33</p>
+                        </div>
+                        <div class="eczane-footer">
+                            <a href="#" class="btn-secondary">Haritada Göster</a>
+                        </div>
+                    </div>
+                    <!-- Örnek Eczane 2 -->
+                    <div class="eczane-card">
+                        <div class="eczane-header">
+                            <h3>Sağlık Eczanesi</h3>
+                            <span class="status"><i class="fa-solid fa-check-circle"></i> ŞU AN AÇIK - NÖBETÇİ</span>
+                        </div>
+                        <div class="eczane-body">
+                            <p><i class="fa-solid fa-map-marker-alt"></i> Lale Sok. No:12/A (Hastaneye 150m)</p>
+                            <p><i class="fa-solid fa-phone"></i> +90 (212) 444 55 66</p>
+                        </div>
+                        <div class="eczane-footer">
+                            <a href="#" class="btn-secondary">Haritada Göster</a>
+                        </div>
+                    </div>
+                    <!-- Örnek Eczane 3 (Kapalı) -->
+                    <div class="eczane-card">
+                        <div class="eczane-header">
+                            <h3>Şifa Eczanesi</h3>
+                            <span class="status" style="color: var(--text-muted);"><i class="fa-solid fa-times-circle"></i> KAPALI (Çalışma Saati: 08:00 - 19:00)</span>
+                        </div>
+                        <div class="eczane-body">
+                            <p><i class="fa-solid fa-map-marker-alt"></i> Park Cad. No:8 (Hastaneye 200m)</p>
+                            <p><i class="fa-solid fa-phone"></i> +90 (212) 777 88 99</p>
+                        </div>
+                        <div class="eczane-footer">
+                            <a href="#" class="btn-secondary" style="opacity: 0.5; pointer-events: none;">Haritada Göster</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- BÖLÜM (SAYFA): S.S.S. -->
+        <section id="faq">
+            <div class="container">
+                <h2 class="section-title">Sıkça Sorulan Sorular</h2>
+                <div class="faq-container">
+                    <!-- Soru 1 -->
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>VIP sağlık hizmeti neleri kapsar?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>VIP hizmetimiz, size özel atanan sağlık danışmanı, lüks bekleme salonları, tetkikler için öncelik, konforlu yatış odaları ve kişiselleştirilmiş tedavi süreçlerini kapsar. Amacımız, hastane sürecinizi bir otel konforunda geçirmenizi sağlamaktır.</p>
+                        </div>
+                    </div>
+                    <!-- Soru 2 -->
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Randevumu nasıl iptal edebilir veya değiştirebilirim?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Randevunuzu, online randevu panelinden, mobil uygulamamızdan veya +90 (212) 123 45 67 numaralı çağrı merkezimizi arayarak randevu saatinizden en az 2 saat önce kolayca değiştirebilir veya iptal edebilirsiniz.</p>
+                        </div>
+                    </div>
+                    <!-- Soru 3 -->
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Özel sağlık sigortaları ile anlaşmanız var mı?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Evet, Türkiye'deki ve dünyadaki başlıca özel sağlık sigortalarının tümü ile anlaşmamız bulunmaktadır. Detaylı ve güncel sigorta listesi için lütfen "Anlaşmalı Kurumlar" sayfamızı ziyaret edin veya çağrı merkezimizden bilgi alın.</p>
+                        </div>
+                    </div>
+                    <!-- Soru 4 -->
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Acil servisiniz 7/24 hizmet veriyor mu?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Evet, tam donanımlı acil servisimiz, uzman acil tıp hekimleri ve tecrübeli ekibiyle haftanın 7 günü, 24 saat kesintisiz hizmet vermektedir.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BÖLÜM (SAYFA): ONLINE RANDEVU FORMU -->
+        <section id="randevu">
+            <div class="container">
+                <h2 class="section-title">Online Randevu Alın</h2>
+                <div class="randevu-form-container">
+                    <form action="#" method="POST" class="randevu-form">
+                        <div class="form-grid">
+                            <!-- Ad Soyad -->
+                            <div class="form-group">
+                                <label for="adsoyad">Adınız Soyadınız</label>
+                                <input type="text" id="adsoyad" name="adsoyad" required>
+                            </div>
+                            <!-- Telefon -->
+                            <div class="form-group">
+                                <label for="telefon">Telefon Numaranız</label>
+                                <input type="tel" id="telefon" name="telefon" placeholder="örn: 5XX XXX XX XX" required>
+                            </div>
+                            <!-- E-posta -->
+                            <div class="form-group">
+                                <label for="email">E-posta Adresiniz</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <!-- Randevu Tarihi -->
+                            <div class="form-group">
+                                <label for="tarih">Randevu Tarihi</label>
+                                <input type="date" id="tarih" name="tarih" required>
+                            </div>
+                            <!-- Tıbbi Bölüm (GÜNCELLENDİ) -->
+                            <div class="form-group">
+                                <label for="bolum">Tıbbi Bölüm</label>
+                                <select id="bolum" name="bolum" required>
+                                    <option value="" disabled selected>Lütfen bir bölüm seçin...</option>
+                                    <option value="kardiyoloji">Kardiyoloji</option>
+                                    <option value="noroloji">Nöroloji</option>
+                                    <option value="ortopedi">Ortopedi</option>
+                                    <option value="goz">Göz Hastalıkları</option>
+                                    <option value="pediatri">Pediatri</option>
+                                    <option value="radyoloji">Radyoloji</option>
+                                    <option value="plastik_cerrahi">Plastik Cerrahi</option>
+                                    <option value="dermatoloji">Dermatoloji</option>
+                                    <option value="beslenme">Beslenme ve Diyet</option>
+                                    <option value="psikiyatri">Psikiyatri</option>
+                                    <option value="genel_cerrahi">Genel Cerrahi</option>
+                                    <option value="kbb">K.B.B.</option>
+                                    <option value="fizik_tedavi">Fizik Tedavi</option>
+                                </select>
+                            </div>
+                            <!-- Doktor Seçimi -->
+                            <div class="form-group">
+                                <label for="doktor">Doktor Seçimi (İsteğe bağlı)</label>
+                                <select id="doktor" name="doktor">
+                                    <option value="" disabled selected>Varsa tercih ettiğiniz doktor...</option>
+                                    <option value="ayse_yilmaz">Prof. Dr. Ayşe Yılmaz</option>
+                                    <option value="mehmet_kaya">Op. Dr. Mehmet Kaya</option>
+                                    <option value="elif_demir">Uzm. Dr. Elif Demir</option>
+                                    <option value="ali_vural">Prof. Dr. Ali Vural</option>
+                                    <option value="zeynep_aksoy">Uzm. Dr. Zeynep Aksoy</option>
+                                    <option value="emre_kurt">Op. Dr. Emre Kurt</option>
+                                    <option value="kemal_aslan">Prof. Dr. Kemal Aslan</option>
+                                </select>
+                            </div>
+                            <!-- Mesajınız -->
+                            <div class="form-group full-width">
+                                <label for="mesaj">Mesajınız (Belirtileriniz)</label>
+                                <textarea id="mesaj" name="mesaj" placeholder="Kısaca belirtilerinizi veya talebinizi yazabilirsiniz..."></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">Randevu Talebi Gönder</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- BÖLÜM (SAYFA): İLETİŞİM, SAATLER VE HARİTA -->
+        <section id="iletisim">
+            <div class="container">
+                <h2 class="section-title">Bize Ulaşın</h2>
+                <div class="iletisim-grid">
+                    
+                    <div class="iletisim-sol">
+                        <!-- Çalışma Saatleri -->
+                        <div class="calisma-saatleri">
+                            <h3>Çalışma Saatleri</h3>
+                            <ul>
+                                <li><span>Pazartesi - Cuma</span> 08:00 - 18:00</li>
+                                <li><span>Cumartesi</span> 09:00 - 14:00</li>
+                                <li><span>Pazar</span> Kapalı</li>
+                                <li><span>Acil Servis</span> 7/24 Açık</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- İletişim Bilgileri -->
+                        <div class="iletisim-info" style="margin-top: 30px;">
+                            <h3>İletişim Bilgileri</h3>
+                            <ul>
+                                <li><i class="fa-solid fa-phone"></i> +90 (212) 123 45 67</li>
+                                <li><i class="fa-solid fa-envelope"></i> info@healthvip.com.tr</li>
+                                <li><i class="fa-solid fa-map-marker-alt"></i> Örnek Cad. Sağlık Sok. No:1, İstanbul</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Harita -->
+                    <div class="harita-container">
+                        <!-- Buraya Google Maps'ten alınan <iframe> kodu yapıştırılmalı -->
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3009.916124707198!2d28.97835931538356!3d41.0259838793001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab9e7a6a4e3b7%3A0x6d9f751f7c3ace3!2sTaksim%20Square!5e0!3m2!1sen!2str!4v1678886483561!5m2!1sen!2str" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== 3. FOOTER (ALT BİLGİ) ===== -->
+    <footer class="footer">
+        <div class="container">
+            <a class="footer-logo" data-target="home">
+                <i class="fa-solid fa-heart-pulse"></i>
+                Health <span>VIP</span>
+            </a>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <p>&copy; 2025 Health VIP. Tüm hakları saklıdır. Bu site bir demo çalışmasıdır.</p>
+        </div>
+    </footer>
+
+
+    <!-- =============================================
+       YENİ EKLENEN HTML BÖLÜMLERİ
+       ============================================= -->
+
+    <!-- ARAMA SONUCU MODALI -->
+    <div class="modal-overlay" id="search-modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Arama Sonucu</h3>
+            <p id="modal-message">Aramanızla eşleşen bir sonuç bulunamadı.</p>
+            <button class="modal-close" id="modal-close">Anladım</button>
+        </div>
+    </div>
+    
+    <!-- YAPAY ZEKA ASİSTAN (CHATBOT) -->
+    
+    <!-- Sohbet Butonu -->
+    <div class="chat-fab" id="chat-fab">
+        <i class="fa-solid fa-comments"></i>
+    </div>
+    
+    <!-- Sohbet Penceresi -->
+    <div class="chat-widget" id="chat-widget">
+        <div class="chat-header">
+            <div>
+                <h3>Health VIP Asistan</h3>
+                <p>Size nasıl yardımcı olabilirim?</p>
+            </div>
+            <i class="fa-solid fa-times" id="chat-close"></i>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <!-- Botun ilk mesajı -->
+            <div class="chat-message bot">
+                Merhaba! Ben Health VIP dijital asistanınız. "Randevu", "Doktorlar", "Tahlil Sonuçları" veya "Otopark" gibi konularda size yardımcı olabilirim.
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Mesajınızı yazın...">
+            <button id="chat-send"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+
+    <!-- =============================================
+       JAVASCRIPT KODLARI: ETKİLEŞİM
+       ============================================= -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. Koyu Tema (Dark Mode) Değiştirici ---
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+            const moonIcon = 'fa-moon';
+            const sunIcon = 'fa-sun';
+
+            // Sayfa yüklendiğinde kullanıcının son tercihini kontrol et
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggle.classList.remove(moonIcon);
+                themeToggle.classList.add(sunIcon);
+            }
+
+            // Butona tıklandığında
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                
+                let theme = 'light';
+                // İkonu değiştir ve tercihi kaydet
+                if (body.classList.contains('dark-mode')) {
+                    themeToggle.classList.remove(moonIcon);
+                    themeToggle.classList.add(sunIcon);
+                    theme = 'dark';
+                } else {
+                    themeToggle.classList.remove(sunIcon);
+                    themeToggle.classList.add(moonIcon);
+                }
+                localStorage.setItem('theme', theme);
+            });
+
+            // --- 2. Mobil Menü (Hamburger) Açma/Kapama ---
+            const menuToggle = document.getElementById('menu-toggle');
+            const navMenu = document.getElementById('nav-menu');
+            const navCenter = document.querySelector('.nav-center'); // Mobil menü için
+
+            if (menuToggle && navMenu) {
+                menuToggle.addEventListener('click', () => {
+                    navMenu.classList.toggle('show-menu');
+                    // GÜNCELLENDİ: Hamburger'e tıklandığında orta menü gösterilir (mobil için)
+                    if (window.innerWidth <= 1200) {
+                         navCenter.style.display = navCenter.style.display === 'flex' ? 'none' : 'flex';
+                         // Bu daha karmaşık bir mobil menü mantığı gerektirebilir, 
+                         // şimdiki CSS 'show-menu' mantığı daha basit ve etkilidir.
+                         // CSS'teki .nav-menu.show-menu mantığına sadık kalalım.
+                    }
+                });
+            }
+             // GÜNCELLENDİ: Basit mobil menü göster/gizle
+             if (menuToggle && navMenu) {
+                menuToggle.addEventListener('click', () => {
+                    navMenu.classList.toggle('show-menu');
+                });
+            }
+            
+            // --- 3. ÇOK SAYFALI SİMÜLASYON YÖNETİMİ ---
+            const allPages = document.querySelectorAll('main > section');
+            const allNavLinks = document.querySelectorAll('[data-target]');
+
+            function showPage(pageId) {
+                // Tüm sayfaları gizle
+                allPages.forEach(page => {
+                    page.style.display = 'none';
+                });
+                
+                // İstenen sayfayı göster
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    // Bölümün orijinal display stilini koru (hero=flex, diğerleri=block/grid)
+                    if(pageId === 'home') {
+                        targetPage.style.display = 'flex';
+                        // Ana sayfada ek özellikleri de göster
+                        document.getElementById('home-features').style.display = 'block';
+                        document.getElementById('home-testimonials').style.display = 'block'; 
+                    } else {
+                        targetPage.style.display = 'block';
+                    }
+                } else {
+                    // Hedef yoksa ana sayfayı göster (güvenlik önlemi)
+                    document.getElementById('home').style.display = 'flex';
+                    document.getElementById('home-features').style.display = 'block';
+                    document.getElementById('home-testimonials').style.display = 'block';
+                }
+                
+                // En üste scroll yap
+                window.scrollTo(0, 0);
+                
+                // Mobil menü açıksa kapat
+                if (navMenu.classList.contains('show-menu')) {
+                    navMenu.classList.remove('show-menu');
+                }
+            }
+
+            // Tüm navigasyon linklerine (logo, menü, butonlar) tıklama olayı ekle
+            allNavLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault(); // Sayfanın zıplamasını engelle
+                    const targetId = link.getAttribute('data-target');
+                    showPage(targetId);
+                    
+                    // Aktif link stilini ayarla
+                    document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+                    // Sadece .nav-link sınıfına sahip olanlara active sınıfı ekle (butonlar hariç)
+                    document.querySelectorAll(`.nav-link[data-target="${targetId}"]`).forEach(activeLink => {
+                        activeLink.classList.add('active');
+                    });
+                });
+            });
+
+            // Sayfa ilk yüklendiğinde ana sayfayı göster
+            showPage('home');
+            
+            // --- 4. S.S.S. Akordiyon Menü ---
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', () => {
+                    // Tıklananı aç/kapat
+                    item.classList.toggle('active');
+                });
+            });
+            
+            // --- 5. GÜNCELLENDİ: AKILLI ARAMA SİSTEMİ (DAHA KAPSAMLI) ---
+            const searchInput = document.getElementById('search-input');
+            const searchButton = document.getElementById('search-button');
+            const searchModal = document.getElementById('search-modal');
+            const modalMessage = document.getElementById('modal-message');
+            const modalClose = document.getElementById('modal-close');
+            
+            // Aranacak verilerin simülasyonu (GÜNCELLENDİ)
+            const searchDatabase = [
+                // Bölümler
+                { term: "kardiyoloji", page: "bolumler", name: "Kardiyoloji Bölümü" },
+                { term: "nöroloji", page: "bolumler", name: "Nöroloji Bölümü" },
+                { term: "ortopedi", page: "bolumler", name: "Ortopedi Bölümü" },
+                { term: "göz", page: "bolumler", name: "Göz Hastalıkları" },
+                { term: "pediatri", page: "bolumler", name: "Pediatri Bölümü" },
+                { term: "radyoloji", page: "bolumler", name: "Radyoloji Bölümü" },
+                { term: "dermatoloji", page: "bolumler", name: "Dermatoloji Bölümü" },
+                { term: "beslenme", page: "bolumler", name: "Beslenme ve Diyet" },
+                { term: "diyet", page: "bolumler", name: "Beslenme ve Diyet" },
+                { term: "psikiyatri", page: "bolumler", name: "Psikiyatri Bölümü" },
+                { term: "genel cerrahi", page: "bolumler", name: "Genel Cerrahi" },
+                { term: "kbb", page: "bolumler", name: "K.B.B." },
+                { term: "kulak burun boğaz", page: "bolumler", name: "K.B.B." },
+                { term: "fizik tedavi", page: "bolumler", name: "Fizik Tedavi" },
+                { term: "ftr", page: "bolumler", name: "Fizik Tedavi" },
+                
+                // Doktorlar
+                { term: "ayşe yılmaz", page: "doktorlar", name: "Prof. Dr. Ayşe Yılmaz" },
+                { term: "mehmet kaya", page: "doktorlar", name: "Op. Dr. Mehmet Kaya" },
+                { term: "elif demir", page: "doktorlar", name: "Uzm. Dr. Elif Demir" },
+                { term: "sena erdem", page: "doktorlar", name: "Doç. Dr. Sena Erdem" },
+                { term: "kemal aslan", page: "doktorlar", name: "Prof. Dr. Kemal Aslan" },
+                
+                // Sayfalar ve Konular
+                { term: "randevu", page: "randevu", name: "Online Randevu" },
+                { term: "iletişim", page: "iletisim", name: "İletişim Bilgileri" },
+                { term: "adres", page: "iletisim", name: "Adres Bilgileri" },
+                { term: "harita", page: "iletisim", name: "Harita" },
+                { term: "telefon", page: "iletisim", name: "Telefon Numarası" },
+                { term: "saatler", page: "iletisim", name: "Çalışma Saatleri" },
+                { term: "sigorta", page: "anlasmalikurumlar", name: "Anlaşmalı Kurumlar" },
+                { term: "anlaşmalı", page: "anlasmalikurumlar", name: "Anlaşmalı Kurumlar" },
+                { term: "allianz", page: "anlasmalikurumlar", name: "Allianz Sigorta" },
+                { term: "axa", page: "anlasmalikurumlar", name: "AXA Sigorta" },
+                { term: "sss", page: "faq", name: "Sıkça Sorulan Sorular" },
+                { term: "soru", page: "faq", name: "Sıkça Sorulan Sorular" },
+                { term: "eczane", page: "eczaneler", name: "Nöbetçi Eczaneler" },
+                { term: "nöbetçi", page: "eczaneler", name: "Nöbetçi Eczaneler" },
+                { term: "check-up", page: "randevu", name: "Check-Up Paketleri" },
+                { term: "checkup", page: "randevu", name: "Check-Up Paketleri" },
+                { term: "sonuç", page: "faq", name: "Tahlil Sonuçları" }, // SSS'e yönlendirir
+                { term: "tahlil", page: "faq", name: "Tahlil Sonuçları" },
+                { term: "otopark", page: "iletisim", name: "Otopark Bilgisi" },
+                { term: "vale", page: "iletisim", name: "Vale Hizmeti" },
+            ];
+
+            function handleSearch() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                if (searchTerm.length < 2) {
+                    modalMessage.textContent = "Lütfen en az 2 harf girin.";
+                    searchModal.style.display = "flex";
+                    return;
+                }
+                
+                let found = null;
+                // Daha iyi eşleşme için: önce tam kelime arar, sonra içeren
+                found = searchDatabase.find(item => item.term === searchTerm);
+                if (!found) {
+                    found = searchDatabase.find(item => item.term.includes(searchTerm));
+                }
+                
+                if (found) {
+                    // Eşleşme bulundu, ilgili sayfayı göster
+                    showPage(found.page);
+                    // Arama çubuğunu temizle
+                    searchInput.value = "";
+                } else {
+                    // Eşleşme bulunamadı
+                    modalMessage.textContent = `"${searchInput.value}" ile ilgili bir sonuç bulunamadı.`;
+                    searchModal.style.display = "flex";
+                }
+            }
+            
+            searchButton.addEventListener('click', handleSearch);
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+            modalClose.addEventListener('click', () => {
+                searchModal.style.display = "none";
+            });
+
+            // --- 6. GÜNCELLENDİ: CHATBOT (ASİSTAN) SİSTEMİ (DAHA KAPSAMLI) ---
+            const chatFab = document.getElementById('chat-fab');
+            const chatWidget = document.getElementById('chat-widget');
+            const chatClose = document.getElementById('chat-close');
+            const chatBody = document.getElementById('chat-body');
+            const chatInput = document.getElementById('chat-input');
+            const chatSend = document.getElementById('chat-send');
+
+            chatFab.addEventListener('click', () => {
+                chatWidget.style.display = 'flex';
+                chatFab.style.display = 'none'; // Butonu gizle
+            });
+
+            chatClose.addEventListener('click', () => {
+                chatWidget.style.display = 'none';
+                chatFab.style.display = 'flex'; // Butonu geri göster
+            });
+
+            function addMessageToChat(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('chat-message', sender);
+                messageDiv.textContent = text;
+                chatBody.appendChild(messageDiv);
+                // Yeni mesaja scroll yap
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            function getBotResponse(text) {
+                const normalizedText = text.toLowerCase();
+                
+                // Typing indicator
+                const typingDiv = document.createElement('div');
+                typingDiv.classList.add('chat-message', 'bot', 'typing');
+                typingDiv.textContent = 'Asistan yazıyor...';
+                chatBody.appendChild(typingDiv);
+                chatBody.scrollTop = chatBody.scrollHeight;
+                
+                setTimeout(() => {
+                    chatBody.removeChild(typingDiv); // Typing indicator'ı kaldır
+                    
+                    if (normalizedText.includes("randevu")) {
+                        addMessageToChat('Elbette, sizi "Online Randevu" sayfamıza yönlendiriyorum.', 'bot');
+                        showPage('randevu');
+                    } else if (normalizedText.includes("doktor")) {
+                        addMessageToChat('Harika, "Uzman Doktorlarımız" sayfasını sizin için açıyorum.', 'bot');
+                        showPage('doktorlar');
+                    } else if (normalizedText.includes("iletişim") || normalizedText.includes("adres") || normalizedText.includes("telefon")) {
+                        addMessageToChat('Tüm "İletişim" bilgilerimizi, adres ve haritamızı bu sayfada bulabilirsiniz.', 'bot');
+                        showPage('iletisim');
+                    } else if (normalizedText.includes("bölüm") || normalizedText.includes("kardiyoloji") || normalizedText.includes("nöroloji")) {
+                        addMessageToChat('Hangi "Tıbbi Bölümlerimiz" hakkında bilgi almak istersiniz? Sayfayı açıyorum.', 'bot');
+                        showPage('bolumler');
+                    } else if (normalizedText.includes("merhaba") || normalizedText.includes("selam")) {
+                        addMessageToChat('Merhaba! Size nasıl yardımcı olabilirim? "Randevu", "Bölümler" veya "Tahlil Sonuçları" gibi anahtar kelimeler kullanabilirsiniz.', 'bot');
+                    } else if (normalizedText.includes("sigorta") || normalizedText.includes("anlaşma")) {
+                        addMessageToChat('"Anlaşmalı Kurumlar" sayfamızı açıyorum, buradan tüm sigorta partnerlerimizi görebilirsiniz.', 'bot');
+                        showPage('anlasmalikurumlar');
+                    } else if (normalizedText.includes("eczane") || normalizedText.includes("nöbetçi")) {
+                        addMessageToChat('Hastanemize en yakın "Nöbetçi Eczaneler" listesini sizin için açıyorum.', 'bot');
+                        showPage('eczaneler');
+                    } else if (normalizedText.includes("check-up") || normalizedText.includes("checkup")) {
+                        addMessageToChat('VIP Check-Up paketlerimiz hakkında bilgi almak ve randevu oluşturmak için "Online Randevu" sayfamızı kullanabilirsiniz.', 'bot');
+                        showPage('randevu');
+                    } else if (normalizedText.includes("sonuç") || normalizedText.includes("tahlil")) {
+                        addMessageToChat('Tahlil sonuçlarınıza, size verilen barkod numarası ve TC Kimlik numaranız ile "Online Sonuç" portalımızdan (demo sürümünde S.S.S. sayfasına yönlendirilir) ulaşabilirsiniz.', 'bot');
+                        showPage('faq'); // Normalde burası ayrı bir portal olur
+                    } else if (normalizedText.includes("fiyat") || normalizedText.includes("ücret")) {
+                        addMessageToChat('Tedavi ve muayene ücretleri, yapılacak işleme ve sigorta kapsamınıza göre değişiklik göstermektedir. En doğru bilgi için +90 (212) 123 45 67 numaralı çağrı merkezimizi arayabilirsiniz.', 'bot');
+                    } else if (normalizedText.includes("otopark") || normalizedText.includes("vale")) {
+                        addMessageToChat('Hastanemize gelen tüm hastalarımız için 7/24 ücretsiz vale ve kapalı otopark hizmetimiz bulunmaktadır. Aracınızı ana girişteki görevlilerimize teslim etmeniz yeterlidir.', 'bot');
+                    } else if (normalizedText.includes("covid") || normalizedText.includes("korona") || normalizedText.includes("test")) {
+                        addMessageToChat('Evet, hastanemizde PCR ve antikor testleri yapılmaktadır. Lütfen "Online Randevu" sayfamızdan "COVID-19 Test" seçeneğini seçerek randevu alınız.', 'bot');
+                        showPage('randevu');
+                    }
+                    else {
+                        addMessageToChat('Üzgünüm, bu konuyu tam anlayamadım. Size daha iyi yardımcı olabilmem için +90 (212) 123 45 67 numaralı çağrı merkezimizi arayabilirsiniz.', 'bot');
+                    }
+                }, 1000 + Math.random() * 500); // Gerçekçi bir gecikme
+            }
+
+            function handleUserMessage() {
+                const userText = chatInput.value.trim();
+                if (userText === "") return;
+                
+                addMessageToChat(userText, 'user');
+                chatInput.value = "";
+                
+                // Bot cevabını al
+                getBotResponse(userText);
+            }
+
+            chatSend.addEventListener('click', handleUserMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleUserMessage();
+                }
+            });
+
+        });
+    </script>
+
+</body>
+</html>
+
